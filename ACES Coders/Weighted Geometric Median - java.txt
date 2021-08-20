@@ -1,0 +1,72 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    public static double dist(double x1, double y1, double x2, double y2)
+    {
+        return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2));
+    }
+
+    public static void main(String[] args) throws Exception
+    {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        String[] data = in.readLine().split(" ");
+        int n = Integer.parseInt(data[0]);
+        int M = Integer.parseInt(data[1]);
+        int[] x = new int[n];
+        int[] y = new int[n];
+        int[] m = new int[n];
+        double cx = 0.0, cy = 0.0, hx = 0.0, hy = 0.0;
+        long mtot = 0;
+        for(int a=0; a<n; a++)
+        {
+            data = in.readLine().split(" ");
+            x[a] = Integer.parseInt(data[0]);
+            y[a] = Integer.parseInt(data[1]);
+            m[a] = Integer.parseInt(data[2]);
+            cx += m[a]*x[a];
+            cy += m[a]*y[a];
+            mtot += m[a];
+        }
+        hx = cx / ((mtot+M)*n);
+        hy = cy / ((mtot+M)*n);
+        cx = cx / (mtot*n);
+        cy = cy / (mtot*n);
+        double d = 0;
+        double rate = 0.000002;
+        int iter = 10000000;
+        if (n>10)
+        {
+            rate = 0.0001;
+            iter = 100000;
+        }
+        for(int i=0; i<iter; i++)
+        {
+            double delCX = 0, delCY = 0, delHX = 0, delHY = 0;
+            for(int a=0; a<n; a++)
+            {
+                d = dist(cx, cy, x[a], y[a]);
+                delCX += m[a]*((cx-x[a])/d);
+                delCY += m[a]*((cy-y[a])/d);
+                d = dist(hx, hy, x[a], y[a]);
+                delHX += m[a]*((hx-x[a])/d);
+                delHY += m[a]*((hy-y[a])/d);
+            }
+            cx -= delCX*rate;
+            cy -= delCY*rate;
+            d = dist(hx, hy, 0, 0);
+            delHX += M*(hx/d);
+            delHY += M*(hy/d);
+            hx -= delHX*rate;
+            hy -= delHY*rate;
+            // System.out.println(delHX*rate+" "+delHY*rate);
+        }
+        int a = (int)Math.round(cx);
+        int b = (int)Math.round(cy);
+        int c = (int)Math.round(hx);
+        int e = (int)Math.round(hy);
+        System.out.println(a+" "+b);
+        System.out.println(c+" "+e);
+    }
+}

@@ -1,0 +1,8 @@
+str1 = input()
+str2 = input()
+s = 0
+for i, l in enumerate(str2):
+    if l != '[':
+        sub = str1[i:len(str1)-len(str2)+1+i]
+        s = s + sub.count(l)
+print(s)

@@ -1,0 +1,52 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    static int max(int a, int b)
+    {
+        return a>b?a:b;
+    }
+    
+    public static void main(String[] args) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        int t = scanner.nextInt();
+        for(int x=0; x<t; x++)
+        {
+            int v = scanner.nextInt();
+            int l = scanner.nextInt();
+            if (l==0) 
+            {
+                System.out.println("!OK");
+                continue;
+            }
+            int[] vols = new int[l];
+            for(int y=0; y<l; y++) vols[y] = scanner.nextInt();
+            
+            if(l<2) 
+            {
+                System.out.println("!OK");
+                continue;
+            }
+            
+            int min = Integer.MAX_VALUE;
+            int[] ans = new int[2];
+            for(int i=0; i<l-1; i++) for(int j=i+1; j<l; j++) 
+            {
+                if(vols[i]+vols[j]==v)
+                {
+                    if (max(i,j)<min)
+                    {
+                        ans[0]=vols[i];
+                        ans[1]=vols[j];
+                        min = max(i,j);
+                    }
+                }
+            }
+            Arrays.sort(ans);
+            if (min<Integer.MAX_VALUE) System.out.println(ans[0]+" "+ans[1]);
+            else System.out.println("!OK");
+        }
+    }
+}

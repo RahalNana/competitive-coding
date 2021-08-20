@@ -1,0 +1,68 @@
+T = int(input())
+for i in range(T):
+    finalCost = 0
+    #F = No. of gas stations
+    #U = maximum units
+    #K = Initial units
+    #M = Length of journey
+    [F, U, K, M] = [int(d) for d in input().split()]
+    gas=[]
+    for j in range(F):
+        gas.append([int(d) for d in input().split()])
+    gas = sorted(gas, key = lambda x: x[0])
+    
+    l = -1
+    r = 0
+    #Find a station
+    while(r<F and gas[r][0] <= K):
+        r += 1
+    if r == 0:
+        print(-1)
+        continue
+    m = gas[0][1]
+    now = 0
+    for j in range(1,r):
+        if gas[j][1] < m:
+            m = gas[j][1]
+            now = j
+    
+    K -= gas[now][0]
+    while True:
+        r = now
+        while(r < F and gas[r][0] - gas[now][0] <= U):
+            r += 1
+        
+        if r == now:
+            print(-1)
+            break
+        
+        #Last Fuel station
+        if now == F - 1:
+            print(finalCost + (M - gas[now][0] - K) * gas[now][1])
+            break
+        if(gas[now+1][0]-gas[now][0] > U):
+            print(-1)
+            break
+        
+        m = gas[now+1][1]
+        pos = now+1
+        for j in range(now+1,r):
+            if m < gas[now][1]:
+                break
+            if gas[j][1] < m:
+                m = gas[j][1]
+                pos = j
+
+        if (M - gas[now][0]<=U and m > gas[now][1]):
+            print(finalCost + (M - gas[now][0] - K) * gas[now][1])
+            break
+
+        elif m >= gas[now][1]:
+            finalCost+=(U - K)*gas[now][1]
+            K = U - gas[pos][0]+gas[now][0]
+            now = pos
+        else:
+            finalCost+=(gas[pos][0] - gas[now][0] - K) * gas[now][1]
+            now = pos
+            #make fuel zero
+            K = 0

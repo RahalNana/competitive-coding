@@ -1,0 +1,25 @@
+n, h, k = list(map(int, input().split()))
+currK=1
+currH=1
+count=0
+currStr="1"
+arr = []
+
+for i in range(2,n+1):
+    if currK+1>k or currH+i>h:
+        count +=1
+        currK = 1
+        currH = i
+        arr.append(currStr)
+        currStr = str(i)
+    else:
+        currK += 1
+        currH += i
+        currStr = currStr+" "+str(i)
+        
+arr.append(currStr)
+
+print(count+1)
+
+for s in arr:
+    print(s)

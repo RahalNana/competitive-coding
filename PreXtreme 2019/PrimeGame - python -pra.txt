@@ -1,0 +1,31 @@
+Q = int(input())
+testList = [True for i in range(0,100001)]
+testList[0] = False
+testList[1] = False
+t = 2
+while (t**2 <= 100000):
+    if testList[t]:
+        for i in range(t**2, 100001, t): 
+                testList[i] = False
+    t += 1
+for i in range(Q):
+    [st, en, ex] = [int(d) for d in input().split()]
+    summ = 0
+    for q in range(st,en):
+        if testList[q]:
+            t = q
+            while(t < len(testList) and t<=en):
+                if testList[t]:
+                    summ = (summ + (t ** ex)%1000000007) % 1000000007
+                t += 1
+            break
+    print(summ % 1000000007)
+        
+        
+    
+    
+    
+    
+    
+    
+    

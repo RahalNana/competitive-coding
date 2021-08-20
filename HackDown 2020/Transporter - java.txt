@@ -1,0 +1,115 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{   
+    static class Station implements Comparable<Station>
+    {
+        Integer pos;
+        int cost;
+        
+        Station(int pos, int cost)
+        {
+            this.pos = pos;
+            this.cost = cost;
+        }
+        
+        public int compareTo(Station s)
+        {
+            return pos.compareTo(s.pos);
+        }
+    }
+    
+    
+    public static void main(String[] args) throws Exception
+    {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        int tc = Integer.parseInt(in.readLine());
+        here : for(int t = 0;  t<tc; t++)
+        {
+            String[] data = in.readLine().split(" ");
+            int p = Integer.parseInt(data[0]);
+            long u = 0l + Integer.parseInt(data[1]);
+            int k = Integer.parseInt(data[2]);
+            int m = Integer.parseInt(data[3]);
+            ArrayList<Station> stations = new ArrayList<Station>(p+2);
+            for(int i=0; i<p; i++)
+            {
+                data = in.readLine().split(" ");
+                stations.add(new Station(Integer.parseInt(data[0]), Integer.parseInt(data[1])));
+            }
+            stations.add(new Station(0, Integer.MAX_VALUE)); //start
+            stations.add(new Station(m, 0)); //end
+            
+            Collections.sort(stations);
+            
+            //checks for possibility
+            if (k<stations.get(0).pos)
+            {
+                System.out.println(-1);
+                continue here;
+            }
+            for(int i=1; i<=p; i++)
+            {
+                if(u < stations.get(i).pos - stations.get(i-1).pos)
+                {
+                    System.out.println(-1);
+                    continue here;
+                }
+            }
+            
+            int currStat = 0;
+            long total = 0l, currFuel = 0l + k;
+            
+            while(currStat!=p+1)
+            {
+                int nextStat = currStat;
+                for(int i=currStat+1; i<p+2; i++)
+                {
+                    if (stations.get(i).pos > stations.get(currStat).pos+currFuel)
+                        break;
+                    if(stations.get(i).cost <= stations.get(nextStat).cost)
+                        nextStat = i;
+                }
+                
+                if(nextStat!=currStat)
+                {
+                    currFuel -= stations.get(nextStat).pos - stations.get(currStat).pos;
+                }
+                else
+                {
+                    int min = Integer.MAX_VALUE;
+                    boolean foundLess = false;
+                    for(int i=currStat+1; i<p+2; i++)
+                    {
+                        if (stations.get(i).pos > stations.get(currStat).pos + u)
+                            break;
+                        if(stations.get(i).cost<=min)
+                        {
+                            nextStat = i;
+                            min = stations.get(i).cost;
+                            if(min<=stations.get(currStat).cost)
+                            {
+                                foundLess = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(foundLess)
+                    {
+                        total += (stations.get(nextStat).pos-stations.get(currStat).pos-currFuel) * stations.get(currStat).cost;
+                        currFuel = 0;
+                    }
+                    else
+                    {
+                        total += (u - currFuel) * stations.get(currStat).cost;
+                        currFuel = u - stations.get(nextStat).pos + stations.get(currStat).pos;
+                    }
+                    
+                }
+                currStat = nextStat;
+            }
+            System.out.println(total);
+        }
+    }
+}

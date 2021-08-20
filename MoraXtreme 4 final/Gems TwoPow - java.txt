@@ -1,0 +1,29 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int[] count = new int[n+1];
+        for(int x=0; x<n; x++)
+            count[in.nextInt()]++;
+        int ans = 0;
+        for(int x=0; x<count.length; x++)
+        {
+            if (count[x]%2 == 1) ans++;
+            if (x!=count.length-1)
+                count[x+1] += count[x]/2;
+            else
+                while(count[x]>0)
+                {
+                    ans += count[x]%2;
+                    count[x] = count[x]/2;
+                }
+        }
+        System.out.println(ans);
+    }
+}

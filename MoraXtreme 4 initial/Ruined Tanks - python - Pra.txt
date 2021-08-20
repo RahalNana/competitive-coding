@@ -1,0 +1,12 @@
+n = int(input())
+walls = [int(i) for i in input().split()]
+maxVol = 0
+l = 0
+r = n - 1
+while l < r:
+    maxVol = max(maxVol, (r-l)*min(walls[l],walls[r]))
+    if walls[l] <= walls[r]:
+        l+=1
+    else:
+        r-=1
+print(maxVol)

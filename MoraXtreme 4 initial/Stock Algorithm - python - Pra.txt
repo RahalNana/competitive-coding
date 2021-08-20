@@ -1,0 +1,29 @@
+from collections import defaultdict
+
+S = int(input())
+stock = [int(i) for i in input().split()]
+count_list = defaultdict(list)
+myList = defaultdict(list)
+stock_max = 0
+
+for i in stock:
+    if (i in count_list): 
+            count_list[i] += 1
+    else: 
+        count_list[i] = 1
+    stock_max = max(stock_max, i)
+
+for i in range(stock_max, 0, -1):
+    numsub = 0; 
+    add = count_list.get(i,0);
+    j = 2
+    while(i*j <= stock_max):
+        add += count_list.get(i*j,0)
+        numsub += myList.get(i*j,0)
+        j+=1
+    myList[i] = ((2**add) - 1 - numsub) % 1000000007
+
+q = int(input())
+for t in range(q):
+    magicNum = int(input())
+    print(myList.get(magicNum,0))

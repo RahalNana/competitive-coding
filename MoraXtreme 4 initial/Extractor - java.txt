@@ -1,0 +1,37 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    public static int max(int a, int b)
+    {
+        return a>b? a: b;
+    }
+    
+    public static void main(String[] args) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        int n = s.length();
+        int[][] count = new int[n][n];
+        
+        for(int x=0; x<n; x++) count[x][x]=1;
+        for(int x=0; x<n-1; x++)
+            if (s.charAt(x)==s.charAt(x+1)) count[x][x+1]=2;
+            else count[x][x+1]=1;
+        int i=0, j=0;
+        for(int l=2; l<n; l++) 
+        {
+            i=0;
+            for(int x=0; x<n-l; x++)
+            {
+                j=i+l;
+                if (s.charAt(i)==s.charAt(j)) count[i][j] = count[i+1][j-1]+2;
+                else count[i][j] = max(count[i+1][j],count[i][j-1]);
+                i++;
+            }
+        }
+        
+        System.out.println(count[0][n-1]);
+    }
+}

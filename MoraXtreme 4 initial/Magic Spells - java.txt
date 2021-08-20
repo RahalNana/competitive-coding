@@ -1,0 +1,61 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    static int RED = 1, YELLOW = 0;
+
+    public static void main(String[] args) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt();
+        int s = scanner.nextInt();
+        
+        int[] balls = new int[n];
+        for(int x=0; x<n; x++) balls[x]=2;
+        
+        while (true)
+        {
+            int x = scanner.nextInt();
+            if (x==-1) break;
+            balls[x-1] = 1;
+        }
+        
+        while (true)
+        {
+            int x = scanner.nextInt();
+            if (x==-1) break;
+            balls[x-1] = 0;
+        }
+        
+        boolean[] matches = new boolean[8];
+        for(int x=0; x<8; x++) matches[x]=true;
+        
+        int[][] test = new int[8][n];
+        for(int x=0; x<n; x++)
+        {
+            test[7][x] = 1;
+            if (x%2==0) test[5][x] = 1;
+            else test[2][x] = 1;
+            
+            if(x%3==0) test[4][x] = 1;
+            else test[3][x] = 1;
+            
+            if(x%3==0 ^ x%2==0) test[1][x] = 1;
+            else test[6][x] = 1;
+            
+            for(int y=0; y<8; y++) if (balls[x]!=2)
+                matches[y] = matches[y] && (test[y][x]==balls[x]);
+        }
+        int k = 0;
+        int[] moves = {1, 2, 1, 1, 1, 1, 2, 0};
+        for(int x=0; x<8; x++) if (matches[x] && (moves[x]==s || moves[x]<s-1))
+        {
+            k++;
+            for(int y=0; y<n; y++) System.out.print(test[x][y]);
+            System.out.println();
+        }
+        if (k==0) System.out.println("IMPOSSIBLE");
+    }
+}

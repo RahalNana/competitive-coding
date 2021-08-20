@@ -1,0 +1,60 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution 
+{
+    public static String str(int n)
+    {
+        return n<10?" "+n:""+n;
+    }
+    
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int[][] arr = new int[2*n+3][2*n+3];
+        for(int i=0; i<n+2; i++)
+            for(int j=0; j<2*n+3; j++)
+            {
+                if(j<=i)
+                {
+                    arr[i][j] = n+2-j;
+                    arr[2*n+2-i][j] = n+2-j;
+                }
+                else if(j<2*n+3-i)
+                {
+                    arr[i][j] = n+2-i;
+                    arr[2*n+2-i][j] = n+2-i;
+                }
+                else
+                {
+                    arr[i][j] = arr[i][j-1]+1;
+                    arr[2*n+2-i][j] = arr[i][j-1]+1;
+                }
+            }
+        
+        int[][] mask = new int[2*n+3][2*n+3];
+        for(int i=2; i<n-1; i++)
+            for(int j=n+1-i+2; j<=n+1+i-2; j++)
+                mask[i][j] = 1;
+        
+        int lim =0;
+        for(int i=n-1; i<2*n+1; i++)
+        {
+            for(int j=lim; j<2*n+3-lim; j++)
+                mask[i][j]=1;
+            lim++;
+        }
+            
+        
+        for(int i=0; i<2*n+3; i++)
+        {
+            for(int j=0; j<2*n+3; j++)
+                System.out.print(mask[i][j]==1?str(arr[i][j])+" ":"00 ");
+            System.out.println(" ");
+        }       
+    }
+}

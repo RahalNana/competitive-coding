@@ -1,0 +1,95 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    static final int TOP=0, BOT=1, LEFT=2, RIGHT=3, TOPL=4, TOPR=5, BOTL=6, BOTR=7;
+    static int rows=0, cols=0, cycles=0;
+    static int[][] cells;
+    
+    public static void print()
+    {
+        for(int x=0; x<rows; x++)
+        {
+            for(int y=0; y<cols; y++) System.out.print(cells[x][y]==1?"*":"-");
+            System.out.println();
+        }
+    }
+    
+    public static int get(int row, int col, int dir)
+    {
+        switch (dir)
+        {
+            case TOP:
+                if (row==0) return cells[rows-1][col];
+                else return cells[row-1][col];
+            case BOT:
+                if (row==rows-1) return cells[0][col];
+                else return cells[row+1][col];
+            case LEFT:
+                if (col==0) return cells[row][cols-1];
+                else return cells[row][col-1];
+            case RIGHT:
+                if (col==cols-1) return cells[row][0];
+                else return cells[row][col+1];
+            case TOPL:
+                if (row==0 && col==0) return cells[rows-1][cols-1];
+                if (row==0) return cells[rows-1][col-1];
+                if (col==0) return cells[row-1][cols-1];
+                else return cells[row-1][col-1];
+            case TOPR:
+                if (row==0 && col==cols-1) return cells[rows-1][0];
+                if (row==0) return cells[rows-1][col+1];
+                if (col==cols-1) return cells[row-1][0];
+                else return cells[row-1][col+1];
+            case BOTL:
+                if (row==rows-1 && col==0) return cells[0][cols-1];
+                if (row==rows-1) return cells[0][col-1];
+                if (col==0) return cells[row+1][cols-1];
+                else return cells[row+1][col-1];
+            case BOTR:
+                if (row==rows-1 && col==cols-1) return cells[0][0];
+                if (row==rows-1) return cells[0][col+1];
+                if (col==cols-1) return cells[row+1][0];
+                else return cells[row+1][col+1];
+        }
+        return 0;
+    }
+    
+    public static int aliveNeigh(int row, int col)
+    {
+        int ans = 0;
+        for(int x=0; x<8; x++) ans+=get(row,col,x);
+        return ans;
+    }
+    
+    public static void evolve()
+    {
+        int[][] next = new int[rows][cols];
+        for(int x=0; x<rows; x++) for(int y=0; y<cols; y++)
+        {
+            int neigh = aliveNeigh(x,y);
+            if (cells[x][y]==1 && (neigh==2 || neigh==3)) next[x][y]=1;
+            else if (cells[x][y]==0 && neigh==3) next[x][y]=1;
+        }
+        cells = next;
+    }
+
+    public static void main(String[] args) 
+    {
+        Scanner scanner = new Scanner(System.in);
+        rows = scanner.nextInt();
+        cols = scanner.nextInt();
+        cycles = scanner.nextInt();
+        cells = new int[rows][cols];
+        scanner.nextLine();
+        for(int x=0; x<rows; x++)
+        {
+            char[] row = scanner.nextLine().toCharArray();
+            for(int y=0; y<cols; y++)
+                cells[x][y] = (row[y]=='*')?1:0;
+        }
+        for(int x=0; x<cycles; x++) evolve();
+        print();
+    }
+}

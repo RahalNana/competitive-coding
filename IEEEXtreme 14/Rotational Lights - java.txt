@@ -1,0 +1,118 @@
+// Don't place your source in a package
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+// Please name your class Main
+class Main 
+{
+    // public static HashMap<Integer,Integer> factors(int n)
+    // {
+    //     HashMap<Integer,Integer> factors = new HashMap<Integer,Integer>();
+    //     factors.put(1,1);
+    //     int factCount = 0;
+    //     while(n%2==0)
+    //     {
+    //         n/=2;
+    //         factCount++;
+    //     }
+    //     if(factCount!=0)
+    //         factors.put(2,factCount);
+        
+        
+    //     for(int i=3; i<=Math.sqrt(n); i+=2)
+    //     {
+    //         factCount=0;
+    //         while(n%i==0)
+    //         {
+    //             n/=i;
+    //             factCount++;
+    //         }
+    //         if(factCount!=0)
+    //             factors.put(i,factCount);
+    //     }
+        
+    //     factors.put(n,1);
+        
+    //     return factors;
+    // }
+    
+    public static LinkedList<Integer> divisors(int n)
+    {
+        LinkedList<Integer> divs = new LinkedList<Integer>();
+        int lim = (int)Math.sqrt(n);
+        for(int i=lim; i>0; i--)
+        {
+            if(n%i==0)
+            {
+                divs.push(i);
+                divs.add(n/i);
+            }
+        }
+        return divs;
+    }
+    
+	public static void main (String[] args) throws java.lang.Exception 
+	{
+	    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+	    String data[] = in.readLine().split(" ");
+	    int n = Integer.parseInt(data[0]);
+	    long t = Long.parseLong(data[1]);
+
+	    data = in.readLine().split(" ");
+	    long[] arr = new long[n+1];
+	    long[] diff = new long[n];
+	    
+	    arr[0] = Long.parseLong(data[0]);
+	    arr[n] = arr[0] + t;
+	    for(int i=1; i<n; i++)
+	    {
+	        arr[i] = Long.parseLong(data[i]);
+	        diff[i-1] = arr[i] - arr[i-1];
+	    }
+	    diff[n-1] = arr[n] - arr[n-1];
+	    
+	    // for(int i=0; i<n; i++)
+	    //     System.out.print(diff[i]+" ");
+        //     System.out.println();
+        
+        int count = 0;
+        // boolean pos = true;
+        // for(int j=0; j<n; j++)
+        //     if(diff[j]!=diff[(j+1)%n])
+        //         pos = false;
+        // if(pos) count = n;
+        
+        // HashMap<Integer,Integer> factors = factors(n);
+        
+        LinkedList<Integer> divs = divisors(n);
+        
+        // for(Integer div : divs) System.out.print(div+" ");
+        
+        for(Integer i : divs)
+        {
+            // System.out.println(i);
+            boolean pos = true;
+            for(int j=0; j<n; j++)
+                if(diff[j]!=diff[(i+j)%n])
+                {
+                    pos = false;
+                    break;
+                }
+            if(pos)
+            {
+                count = n/i;
+                break;
+            }
+        }
+        
+        //Answer :
+        System.out.println(t/count-1);
+        
+        
+        // System.out.println(count);
+        // HashMap<Integer,Integer> factors = factors(n);
+        // for(Integer i : divs)
+        //     System.out.println(i);
+	}
+}

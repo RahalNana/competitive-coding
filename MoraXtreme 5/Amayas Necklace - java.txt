@@ -1,0 +1,49 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution 
+{
+    public static boolean isSubSequence(char[] pat, char[] str) 
+    { 
+        int m=pat.length;
+        int n = str.length;
+        
+        while (true)
+        {
+            if (m == 0)  
+                return true; 
+            if (n == 0)  
+                return false; 
+
+            if (pat[m-1] == str[n-1]) 
+            {
+                m--;
+                n--;
+            }
+            else
+                n--; 
+        }
+    } 
+    
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        char[] s = in.nextLine().toCharArray();
+        char[] pat = in.nextLine().toCharArray();
+        String[] dat = in.nextLine().split(" ");
+        int n = dat.length;
+        for(int i=0; i<n; i++)
+        {
+            int j = Integer.parseInt(dat[i])-1;
+            s[j] = '#';
+            if (!isSubSequence(pat, s))
+            {
+                System.out.println(i);
+                break;
+            }
+        }
+    }
+}

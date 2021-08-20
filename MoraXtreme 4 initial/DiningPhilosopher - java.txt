@@ -1,0 +1,101 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution 
+{
+    static int keyPos = 0, keyCount = 0, count = 0;
+    static HashMap<Integer,Integer> valCount;
+    static ArrayList<Integer> keyList;
+    
+    public static void decr()
+    {
+        if (keyCount>1) keyCount--;
+        else
+        {
+            for(int x=keyPos-1; x>=0; x--) if(valCount.get(keyList.get(x))>0)
+            {
+                keyPos = x;
+                keyCount = valCount.get(keyList.get(keyPos));
+                return;
+            }
+        }
+    }
+    
+    public static void incr() 
+    {
+        if (keyCount<valCount.get(keyList.get(keyPos))) keyCount++;
+        else
+        {
+            for(int x=keyPos+1; x<keyList.size(); x++) if(valCount.get(keyList.get(x))>0)
+            {
+                keyPos = x;
+                keyCount = 1;
+                return;
+            }
+        }
+    }
+    
+    public static void main(String[] args)
+    {
+        Scanner scanner = new Scanner(System.in);
+        int p = scanner.nextInt();
+        int q = scanner.nextInt();
+        int r = scanner.nextInt();
+        
+        int[] vals = new int[2*p];
+        valCount = new HashMap<Integer,Integer>();
+        
+        for(int x=0; x<p; x++)
+        {
+            vals[x] = scanner.nextInt();
+            vals[x+p] = vals[x];
+            if (x<q) 
+            {
+                if (valCount.containsKey(vals[x])) valCount.put(vals[x], valCount.get(vals[x])+1);
+                else valCount.put(vals[x], 1);
+            }
+            else
+            {
+                if (!valCount.containsKey(vals[x])) valCount.put(vals[x], 0);
+            }
+        }
+        
+        keyList = new ArrayList<Integer>(valCount.keySet());
+        Collections.sort(keyList);
+        
+        for(int x=0; x<keyList.size(); x++)
+        {
+            count += valCount.get(keyList.get(x));
+            if (count >= r)
+            {
+                keyPos = x;
+                keyCount = valCount.get(keyList.get(x)) - (count - r);
+                break;
+            }
+        }
+        
+        int rval = keyList.get(keyPos);
+        int in=0, out=0, min=rval;
+        
+        for(int x=1; x<p; x++)
+        {
+            in = vals[x+q-1];
+            out = vals[x-1];
+            valCount.put(out, valCount.get(out)-1);
+            valCount.put(in, valCount.get(in)+1);
+            if (out==rval)
+            {
+                if (valCount.get(rval)<keyCount && in<rval) decr();
+                else if (valCount.get(rval)<keyCount && in>rval) incr();
+            }
+            else if (out>rval && in<rval) decr();
+            else if (out<rval && in>rval) incr();
+            
+            rval = keyList.get(keyPos);
+            if (keyList.get(keyPos)<min) min = keyList.get(keyPos);
+        }
+        
+        System.out.println(min);
+        
+    }
+}
