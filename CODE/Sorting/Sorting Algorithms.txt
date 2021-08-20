@@ -1,0 +1,15 @@
+Insertion Sort - O(n2) Fast on small arrays and nearly sorted arrays
+
+Merge Sort - O(n lgn) Does not operate in place. Optimal
+
+Heap Sort
+
+Quicksort
+
+Counting Sort
+
+Radix Sort
+
+Bucket Sort
+
+Bubble Sort - O(n2) Inefficient, dont use

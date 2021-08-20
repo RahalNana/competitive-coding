@@ -1,0 +1,203 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution 
+{
+    public static class Node implements Comparable<Node>
+    {
+        int id, hid;
+        Integer key;
+        Node parent;
+        HashMap<Node,Integer> adj;
+        boolean inQ;
+
+        public Node(int id)
+        {
+            this.id = id;
+            key = Integer.MAX_VALUE;
+            adj = new HashMap<Node,Integer>();
+            hid = id;
+            inQ = true;
+        }
+
+        public void link(Node n, int weight)
+        {
+            if ((adj.containsKey(n) && weight<adj.get(n)) || !adj.containsKey(n))
+                adj.put(n, weight);
+        }
+
+        public int compareTo(Node n)
+        {
+            return key.compareTo(n.key);
+        }
+    }
+
+    public static class MinHeap<T extends Node> extends ArrayList<T>
+    {
+        public static int parent(int i)
+        {
+            return (i-1)/2;
+        }
+
+        public static int left(int i)
+        {
+            return 2*i+1;
+        }   
+
+        public static int right(int i)
+        {
+            return 2*i+2;
+        }
+
+        public void swap(int i, int j)
+        {
+            get(i).hid = j;
+            get(j).hid = i;
+            T temp = get(i);
+            set(i, get(j));
+            set(j, temp);
+        }
+
+        public MinHeap(List<T> list)
+        {
+            super(list);
+            for(int x=parent(size()-1); x>=0; x--)
+                heapify(x);
+        }
+
+        public void heapify(int i)
+        {
+            int index = i;
+            T smallest = get(i);
+            if(left(i)<size() && get(left(i)).compareTo(smallest)<0)
+            {
+                index = left(i);
+                smallest = get(left(i));
+            }
+            if(right(i)<size() && get(right(i)).compareTo(smallest)<0)
+            {
+                index = right(i);
+                smallest = get(right(i));
+            }
+            if (index!=i)
+            {  
+                swap(index, i);
+                heapify(index);          
+            }
+        }
+
+        public ArrayList<T> heapSort()
+        {
+            ArrayList<T> ans = new ArrayList();
+            while(size()>0) ans.add(extractMin());
+            return ans;
+        }
+
+        public boolean add(T a)
+        {
+            super.add(a);
+            int i = size()-1;
+            while(get(i).compareTo(get(parent(i)))<0)
+            {
+                swap(i, parent(i));
+                i = parent(i);
+            }
+            return true;
+        }
+
+        public void decrease(int i, int val)
+        {
+            if(val>get(i).key) return;
+            get(i).key = val;
+            while(get(i).compareTo(get(parent(i)))<0)
+            {
+                swap(i, parent(i));
+                i = parent(i);
+            }
+        }
+
+        public T extractMin()
+        {
+            swap(0, size()-1);
+            T ans = remove(size()-1);
+            if(size()!=0) heapify(0);
+            return ans;
+        }
+    }
+
+    // Complete the prims function below.
+    static int prims(int n, int[][] edges, int start) 
+    {
+        //blank nodes
+        ArrayList<Node> nodes = new ArrayList<Node>(n);
+        for(int i=0; i<n; i++) nodes.add(new Node(i));
+
+        //fills in edges
+        int e = edges.length;
+        for(int i=0; i<e; i++)
+        {
+            nodes.get(edges[i][0]-1).link(nodes.get(edges[i][1]-1), edges[i][2]);
+            nodes.get(edges[i][1]-1).link(nodes.get(edges[i][0]-1), edges[i][2]);
+        }
+        start = start-1;
+        nodes.get(start).key = 0;
+
+        MinHeap<Node> min = new MinHeap<Node>(nodes);
+        Node currNode;
+        int sum = 0;
+        while(min.size()>0)
+        {
+            currNode = min.extractMin();
+            currNode.inQ = false;
+            if (currNode.parent!=null) sum += currNode.adj.get(currNode.parent);
+            for(Node adjNode : currNode.adj.keySet()) 
+                if(adjNode.inQ && currNode.adj.get(adjNode)<adjNode.key)
+                {
+                    min.decrease(adjNode.hid, currNode.adj.get(adjNode));
+                    adjNode.parent = currNode;
+                }
+        }
+        return sum;
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] nm = scanner.nextLine().split(" ");
+
+        int n = Integer.parseInt(nm[0]);
+
+        int m = Integer.parseInt(nm[1]);
+
+        int[][] edges = new int[m][3];
+
+        for (int i = 0; i < m; i++) {
+            String[] edgesRowItems = scanner.nextLine().split(" ");
+            scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+            for (int j = 0; j < 3; j++) {
+                int edgesItem = Integer.parseInt(edgesRowItems[j]);
+                edges[i][j] = edgesItem;
+            }
+        }
+
+        int start = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        int result = prims(n, edges, start);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}

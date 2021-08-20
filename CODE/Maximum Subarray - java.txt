@@ -1,0 +1,31 @@
+	static int[] maxSubArray(int[] arr)
+	{
+		int[] res = new int[2];
+		int n = arr.length;
+		
+		int sum = 0;
+		int maxSum = 0;
+		
+		int currStart=0, currEnd=0, start=0, end=0;
+		
+		for(int j=0; j<n; j++)
+		{
+			sum += arr[j];
+			currEnd = j;
+			if (sum>maxSum)
+			{
+				maxSum = sum;
+				start = currStart;
+				end = currEnd;
+			}
+			if (sum<=0)
+			{
+				sum = 0;
+				currStart = j+1;
+				currEnd = j+1;
+			}
+		}
+		res[0] = start;
+		res[1] = end;
+		return res;
+	}

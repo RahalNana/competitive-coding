@@ -1,0 +1,50 @@
+    static int[] computeLPS(String pattern)
+    {
+        int m = pattern.length();
+        int[] lps = new int[m];
+        lps[0]=0;
+        int len = 0;
+        for(int x=1; x<m; x++)
+        {
+            if(pattern.charAt(len)==pattern.charAt(x))
+            {
+                len++;
+                lps[x]=len;
+            }
+            else
+            {
+                if(len==0) lps[x]=0;
+                else
+                {
+                    len = lps[len-1];
+                    x--;
+                }
+            }
+        }
+        return lps;
+    }
+
+    static int getCount(String parent, String child)
+    {
+        int len = parent.length();
+        int n = child.length();
+        int[] lps = computeLPS(child);
+        int count = 0;
+        int m=0;
+        for(int x=0; x<len; x++)
+        {
+            if (child.charAt(m)==parent.charAt(x)) m++;
+            else if(m!=0)
+            {
+                m = lps[m-1];
+                x--;
+            }
+
+            if(m==n)
+            {
+                count++;
+                m = lps[m-1];
+            }
+        }
+        return count;
+    }

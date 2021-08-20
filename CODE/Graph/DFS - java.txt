@@ -1,0 +1,66 @@
+    public static final int WHITE=0, GREY=1, BLACK=2;
+    
+    public static int time = 0;
+
+    public static class Node
+    {
+        int id, colour, dtime, ftime;
+        Node parent;
+        LinkedList<Node> adj;
+
+        public Node(int id)
+        {
+            this.id = id;
+            colour = WHITE;
+            dtime = -1;
+            ftime = -1;
+            adj = new LinkedList<Node>();
+        }
+
+        public void link(Node n)
+        {
+            adj.add(n);
+        }
+
+        public String toString()
+        {
+            return id+" : "+dtime+" / "+ftime;
+        }
+    }
+
+    public static void DFS(Node root)
+    {
+        LinkedList<Node> stack = new LinkedList<Node>();
+        stack.push(root);
+        Node currNode;
+        while (stack.size()!=0)
+        {
+            time++;
+            currNode = stack.peek();
+            if (currNode.colour==WHITE)
+            {
+                currNode.colour = GREY;
+                currNode.dtime = time;
+                for(Node adjNode : currNode.adj) 
+                    if (adjNode.colour == WHITE)
+                        stack.push(adjNode);
+            }
+            else if (currNode.colour == GREY)
+            {
+                currNode.colour = BLACK;
+                currNode.ftime = time;
+                stack.pop();
+            }
+            else
+            {
+                stack.pop();
+                time--;
+            }
+        }
+    }
+
+    public static void DFS(Node[] graph)
+    {
+        for(int i=0; i<graph.length; i++) if (graph[i].colour==WHITE)
+            DFS(graph[i]);
+    }

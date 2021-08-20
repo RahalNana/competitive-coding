@@ -1,0 +1,206 @@
+import java.util.*;
+
+public class Solution 
+{
+    public static char START='a', END='w';
+
+    public static int min(int a, int b) {return a<b?a:b;}
+
+    public static class Edge extends HashSet<Node> 
+    {
+        int id, bcc;
+        Node a, b;
+        boolean bridge;
+
+        public Edge(int id, Node a, Node b)
+        {
+            super();
+            add(a);
+            add(b);
+            this.id = id;
+            this.a = a;
+            this.b = b;
+            bcc = -1;
+        }
+
+        public String toString()
+        {
+            return id+" : "+a.id+"-"+b.id+" "+bcc;
+        }
+    }
+
+    public static class Node implements Comparable<Node>
+    {
+        Character id;
+        HashMap<Node, Edge> adj;
+        HashSet<Node> children;
+        boolean visited, finished, AP;
+        Integer dtime = 0, ftime = 0, low = 0;
+        Node parent;
+        Edge parentEdge;
+
+        public Node(char id)
+        {
+            this.id = id;
+            adj = new HashMap<Node, Edge>();
+            children = new HashSet<Node>();
+            visited = false;
+            finished = false;
+        }
+
+        public void link(Node n, Edge e)
+        {
+            adj.put(n,e);
+        }
+
+        public void addChild(Node n)
+        {
+            children.add(n);
+        }
+
+        public int compareTo(Node n)
+        {
+            return id.compareTo(n.id);
+        }
+
+        public String toString()
+        {
+            return id+" : "+dtime+"/"+ftime+" "+AP;
+        }
+    }
+
+    public static int time = 0;
+
+    public static HashSet<Edge> getBridges(Node n)
+    {
+        LinkedList<Node> stack = new LinkedList<Node>();
+        HashSet<Edge> bridges = new HashSet<Edge>();
+        stack.push(n);
+        Node currNode;
+        while (stack.size()!=0)
+        {
+            time++;
+            currNode = stack.peek();
+            if (!currNode.visited)
+            {
+                currNode.visited = true;
+                currNode.dtime = currNode.low = time;
+                for(Node adjNode : currNode.adj.keySet())
+                { 
+                    if(!adjNode.visited)
+                    {
+                        stack.push(adjNode);
+                        adjNode.parent = currNode;
+                        adjNode.parentEdge = currNode.adj.get(adjNode);
+                    }
+                    else if(currNode.parent!=adjNode)
+                        currNode.low = min(currNode.low, adjNode.dtime);
+                }
+            }
+            else if (!currNode.finished)
+            {
+                currNode.finished = true;
+                currNode.ftime = time;
+                
+                //checks if any descendant will get isolated by deletion
+                for(Node child : currNode.children) 
+                {
+                    if (child.low == child.dtime) 
+                    {
+                        bridges.add(currNode.adj.get(child));
+                        currNode.adj.get(child).bridge = true;
+                    }
+                    if (child.low == child.dtime || child.low == currNode.dtime) currNode.AP = true;
+                    currNode.low = min(currNode.low, child.low);
+                }
+
+                if (currNode.parent!=null)
+                    currNode.parent.addChild(currNode);
+                else
+                    currNode.AP = currNode.children.size()>1;
+                
+                stack.pop();
+            }
+            else
+            {
+                stack.pop();
+                time--;
+            }
+        }
+        return bridges;
+    }
+
+    public static void BCC(Node n)
+    {
+        LinkedList<Node> stack = new LinkedList<Node>();
+        stack.push(n);
+        int bcc = 0;
+        while(stack.size()>0)
+        {
+            n = stack.pop();
+            if (!n.visited)
+            {
+                n.visited = true;
+                if (n.parent==null || n.parentEdge.bridge)
+                {
+                    for(Node child : n.children)
+                    {
+                        stack.push(child);
+                        if(!child.parentEdge.bridge) 
+                            child.parentEdge.bcc = ++bcc;
+                    }
+                }
+                else if (!n.parentEdge.bridge)
+                {
+                    for(Node adjNode : n.adj.keySet()) 
+                    {
+                        stack.push(adjNode);
+                        if(!n.adj.get(adjNode).bridge)
+                            n.adj.get(adjNode).bcc = n.parentEdge.bcc;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        int v = in.nextInt();
+        int e = in.nextInt();
+        in.nextLine();
+        
+        //HashMap used only for reading inputs in form of characters
+        HashMap<Character, Node> nodes = new HashMap<Character, Node>();
+        ArrayList<Node> graph = new ArrayList<Node>();
+        ArrayList<Edge> edges = new ArrayList<Edge>();
+
+        //creates blank graph
+        for(char c=START; c<=END; c++) 
+        {
+            nodes.put(c,new Node(c));
+            graph.add(nodes.get(c));
+        }
+
+        //adds edges from input
+        for(int i=0; i<e; i++) 
+        {
+            char[] data = in.nextLine().replace(" ","").toCharArray();
+            edges.add(new Edge(i, nodes.get(data[0]), nodes.get(data[1])));
+            nodes.get(data[0]).link(nodes.get(data[1]), edges.get(i));
+            nodes.get(data[1]).link(nodes.get(data[0]), edges.get(i));
+        }
+
+        //start DFS at node 0 (assumes graph is connected)
+        HashSet<Edge> bridges = getBridges(graph.get(0));
+        
+        for(Node n: graph)
+            n.visited = false;
+            
+        BCC(graph.get(0));
+        for(Edge b : edges) System.out.println(b);
+        // HashSet<Node> AP = new HashSet<Node>();
+        // for(Node n: graph) if(n.AP) 
+        //         AP.add(n);
+    }
+}

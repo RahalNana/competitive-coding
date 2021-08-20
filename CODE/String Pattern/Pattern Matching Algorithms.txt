@@ -1,0 +1,13 @@
+KMP Algorithm - Preprocesses Pattern to compute LPS array. O(N+M)
+
+Rabin Karp Algorithm - Computes Hash values for pattern and window of string. Efficiently rehashes string. O(N+M) on average, Worst Case O(NM)
+
+Z - Algorithm
+
+Finite Automata Algorithm
+
+Boyer Moore Algorithm
+
+Ukkonens Algorithm
+
+Kasais Algorithm

@@ -1,0 +1,88 @@
+import java.util.*;
+
+public class Solution 
+{
+    public static class Node implements Comparable<Node>
+    {
+        Character id;
+        LinkedList<Node> adj;
+        boolean visited, finished;
+        int dtime=0, ftime=0;
+
+        public Node(char id)
+        {
+            this.id = id;
+            adj = new LinkedList<Node>();
+            visited = false;
+            finished = false;
+        }
+
+        public void link(Node n)
+        {
+            adj.add(n);
+        }
+
+        public int compareTo(Node n)
+        {
+            return id.compareTo(n.id);
+        }
+
+        public String toString()
+        {
+            return id+" : "+dtime+"/"+ftime;
+        }
+    }
+
+    public static LinkedList<Node> topo = new LinkedList<Node>();
+    public static int time = 0;
+
+    public static void DFS(Node n)
+    {
+        LinkedList<Node> stack = new LinkedList<Node>();
+        stack.push(n);
+        Node currNode;
+        while (stack.size()!=0)
+        {
+            time++;
+            currNode = stack.peek();
+            // System.out.println(currNode);
+            if (!currNode.visited)
+            {
+                currNode.visited = true;
+                currNode.dtime = time;
+                for(Node adjNode : currNode.adj) if(!adjNode.visited)
+                    stack.push(adjNode);
+            }
+            else if (!currNode.finished)
+            {
+                currNode.finished = true;
+                currNode.ftime = time;
+                topo.push(currNode);
+                stack.pop();
+            }
+            else
+            {
+                stack.pop();
+                time--;
+            }
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        int v = in.nextInt();
+        int e = in.nextInt();
+        in.nextLine();
+        HashMap<Character, Node> nodes = new HashMap<Character, Node>();
+        for(char c='m'; c<='z'; c++) nodes.put(c,new Node(c));
+        for(int i=0; i<e; i++) 
+        {
+            char[] data = in.nextLine().replace(" ","").toCharArray();
+            nodes.get(data[0]).link(nodes.get(data[1]));
+        }
+        for(char c='m'; c<='z'; c++) Collections.sort(nodes.get(c).adj, Collections.reverseOrder());
+        for(char c='m'; c<='z'; c++) if(!nodes.get(c).visited) DFS(nodes.get(c));
+        for(Node n: topo) System.out.println(n);
+    }
+}

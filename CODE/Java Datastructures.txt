@@ -1,0 +1,13 @@
+ArrayList - get - O(1), remove is very slow
+
+LinkedList - get - O(n), remove is faster implements Queue, Stack
+
+PriorityQueue - implements Heap
+
+HashSet - O(1) add, remove, contains. No positional Access. Cannot be sorted
+
+TreeSet - Natural ordered, O(logn) add, remove, contains. No positional access, not updated realtime
+
+HashMap - O(1) add, remove, containsKey. Cannot be sorted
+
+TreeMap - Natural Ordered Keys, O(logn) add, remove, containsKey

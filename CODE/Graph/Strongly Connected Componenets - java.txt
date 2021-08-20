@@ -1,0 +1,193 @@
+import java.util.*;
+
+public class Solution 
+{
+    public static char START='q', END='z';
+    public static class Node implements Comparable<Node>
+    {
+        Character id;
+        HashSet<Node> adj;
+        boolean visited, finished;
+        Integer dtime=0, ftime=0, SSCID;
+
+        public Node(char id)
+        {
+            this.id = id;
+            adj = new HashSet<Node>();
+            visited = false;
+            finished = false;
+        }
+
+        public Node(char id, int dtime, int ftime)
+        {
+            this(id);
+            this.dtime = dtime;
+            this.ftime = ftime;
+        }
+
+        public void link(Node n)
+        {
+            adj.add(n);
+        }
+
+        public int compareTo(Node n)
+        {
+            return ftime.compareTo(n.ftime);
+        }
+
+        public String toString()
+        {
+            return id+" : "+dtime+"/"+ftime;
+        }
+    }
+
+    public static class Component
+    {
+        HashSet<Node> nodes;
+        int id;
+
+        public Component(int id)
+        {
+            this.id = id;
+            nodes = new HashSet<Node>();
+        }
+
+        public void add(Node n)
+        {
+            nodes.add(n);
+            n.SSCID = id;
+        }
+
+        public String toString()
+        {
+            String res = id +" : ";
+            for(Node n: nodes) res += n.id+" ";
+            return res;
+        }
+    }
+
+    public static int time = 0;
+    public static int compCount = 0;
+
+    public static void DFS(Node n)
+    {
+        LinkedList<Node> stack = new LinkedList<Node>();
+        stack.push(n);
+        Node currNode;
+        while (stack.size()!=0)
+        {
+            time++;
+            currNode = stack.peek();
+            if (!currNode.visited)
+            {
+                currNode.visited = true;
+                currNode.dtime = time;
+                for(Node adjNode : currNode.adj) if(!adjNode.visited)
+                    stack.push(adjNode);
+            }
+            else if (!currNode.finished)
+            {
+                currNode.finished = true;
+                currNode.ftime = time;
+                stack.pop();
+            }
+            else
+            {
+                stack.pop();
+                time--;
+            }
+        }
+    }
+
+    public static ArrayList<Node> transpose(ArrayList<Node> graph, HashMap<Character,Node> nodes)
+    {
+        //we use hashmap to reference nodes because id is character based
+        ArrayList<Node> graphT = new ArrayList<Node>();
+        HashMap<Character,Node> nodesT = new HashMap<Character,Node>();
+        for(Node n : graph) 
+        {
+            nodesT.put(n.id, new Node(n.id, n.dtime, n.ftime));
+            graphT.add(nodesT.get(n.id));
+        }
+
+        for(char c=START; c<=END; c++)
+            for(Node n: nodes.get(c).adj)
+                nodesT.get(n.id).link(nodesT.get(c));
+
+        return graphT;
+    }
+
+    //second DFS
+    public static Component Group(Node n)
+    {
+        Component currComp = new Component(compCount);
+        compCount++;
+        LinkedList<Node> stack = new LinkedList<Node>();
+        stack.push(n);
+        Node currNode;
+        while (stack.size()!=0)
+        {
+            currNode = stack.peek();
+            if (!currNode.visited)
+            {
+                currNode.visited = true;
+                for(Node adjNode : currNode.adj) if(!adjNode.visited)
+                    stack.push(adjNode);
+            }
+            else if (!currNode.finished)
+            {
+                currNode.finished = true;
+                currComp.add(currNode);
+                stack.pop();
+            }
+            else
+            {
+                stack.pop();
+            }
+        } 
+        return currComp;
+    }
+
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        int v = in.nextInt();
+        int e = in.nextInt();
+        in.nextLine();
+        
+        //HashMap used only for reading inputs in form of characters
+        HashMap<Character, Node> nodes = new HashMap<Character, Node>();
+        ArrayList<Node> graph = new ArrayList<Node>();
+
+        //creates blank graph
+        for(char c=START; c<=END; c++) 
+        {
+            nodes.put(c,new Node(c));
+            graph.add(nodes.get(c));
+        }
+
+        //adds edges from input
+        for(int i=0; i<e; i++) 
+        {
+            char[] data = in.nextLine().replace(" ","").toCharArray();
+            nodes.get(data[0]).link(nodes.get(data[1]));
+        }
+
+        //carries out first DFS to compute ftimes
+        for(Node n: graph) if(!n.visited) DFS(n);
+
+        //compute transpose graph
+        ArrayList<Node> graphT = transpose(graph, nodes);
+
+        //sort nodes in order of ftime
+        Collections.sort(graphT, Collections.reverseOrder());
+        
+        //create blank component list
+        LinkedList<Component> components = new LinkedList<Component>();
+        
+        //add each component to list
+        for(Node n: graphT) if(!n.visited) components.add(Group(n));
+
+        for(Component c: components) System.out.println(c);
+    }
+}

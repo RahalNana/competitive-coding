@@ -1,0 +1,48 @@
+    public static int countInversions(int[] arr, int start, int end)
+    {
+        int mid = (start+end)/2;
+        if (end==start)
+            return 0;
+        int left = countInversions(arr, start, mid);
+        int right = countInversions(arr, mid+1, end);
+        int res = mergeInversions(arr,start,mid,end) +left +right;
+        return res;
+    }
+
+    public static int mergeInversions(int[] arr, int start, int mid, int end)
+    {
+        int n1 = mid - start + 1;
+        int n2 = end - mid;
+        int inversions = 0;
+        int[] left = new int[n1];
+        int[] right = new int[n2];
+        for(int x=start; x<=mid; x++) left[x-start] = arr[x];
+        for(int x=mid+1; x<=end; x++) right[x-mid-1] = arr[x];
+        int i=0, j=0;
+        while(i<n1 && j<n2)
+        {
+            if(left[i]<=right[j])
+            {
+                arr[start+i+j] = left[i];
+                i++;
+            }
+            else
+            {
+                arr[start+i+j] = right[j];
+                j++;
+                inversions += n1 - i;
+            }
+        }
+        while(i<n1)
+        {
+            arr[start+i+j] = left[i];
+            i++;   
+        }
+        while(j<n2)
+        {
+            arr[start+i+j] = right[j];
+            j++;
+            inversions += n1 - i;
+        }
+        return inversions;
+    }

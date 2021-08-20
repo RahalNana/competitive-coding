@@ -1,0 +1,159 @@
+import java.util.*;
+
+public class Solution 
+{
+    public static char START='a', END='w';
+
+    public static int min(int a, int b) {return a<b?a:b;}
+
+    public static class Edge extends HashSet<Node> 
+    {
+        Node a, b;
+
+        public Edge(Node a, Node b)
+        {
+            super();
+            add(a);
+            add(b);
+            this.a = a;
+            this.b = b;
+        }
+
+        public String toString()
+        {
+            return a.id+"-"+b.id;
+        }
+    }
+
+    public static class Node implements Comparable<Node>
+    {
+        Character id;
+        HashSet<Node> adj;
+        HashSet<Node> children;
+        boolean visited, finished, AP;
+        Integer dtime = 0, ftime = 0, low = 0;
+        Node parent;
+
+        public Node(char id)
+        {
+            this.id = id;
+            adj = new HashSet<Node>();
+            children = new HashSet<Node>();
+            visited = false;
+            finished = false;
+        }
+
+        public void link(Node n)
+        {
+            adj.add(n);
+        }
+
+        public void addChild(Node n)
+        {
+            children.add(n);
+        }
+
+        public int compareTo(Node n)
+        {
+            return id.compareTo(n.id);
+        }
+
+        public String toString()
+        {
+            return id+" : "+dtime+"/"+ftime+" "+AP;
+        }
+    }
+
+    public static int time = 0;
+
+    public static HashSet<Edge> getBridges(Node n)
+    {
+        LinkedList<Node> stack = new LinkedList<Node>();
+        HashSet<Edge> bridges = new HashSet<Edge>();
+        stack.push(n);
+        Node currNode;
+        while (stack.size()!=0)
+        {
+            time++;
+            currNode = stack.peek();
+            if (!currNode.visited)
+            {
+                currNode.visited = true;
+                currNode.dtime = currNode.low = time;
+                for(Node adjNode : currNode.adj)
+                { 
+                    if(!adjNode.visited)
+                    {
+                        stack.push(adjNode);
+                        adjNode.parent = currNode;
+                    }
+                    else if(currNode.parent!=adjNode)
+                        currNode.low = min(currNode.low, adjNode.dtime);
+                }
+            }
+            else if (!currNode.finished)
+            {
+                currNode.finished = true;
+                currNode.ftime = time;
+                
+                //checks if any descendant will get isolated by deletion
+                for(Node child : currNode.children) 
+                {
+                    if (child.low == child.dtime) bridges.add(new Edge(child, currNode));
+                    if (child.low == child.dtime || child.low == currNode.dtime) currNode.AP = true;
+                    currNode.low = min(currNode.low, child.low);
+                }
+
+                if (currNode.parent!=null)
+                    currNode.parent.addChild(currNode);
+                else
+                    currNode.AP = currNode.children.size()>1;
+                
+                stack.pop();
+            }
+            else
+            {
+                stack.pop();
+                time--;
+            }
+        }
+        return bridges;
+    }
+
+    public static void main(String[] args) 
+    {
+        Scanner in = new Scanner(System.in);
+        int v = in.nextInt();
+        int e = in.nextInt();
+        in.nextLine();
+        
+        //HashMap used only for reading inputs in form of characters
+        HashMap<Character, Node> nodes = new HashMap<Character, Node>();
+        ArrayList<Node> graph = new ArrayList<Node>();
+
+        //creates blank graph
+        for(char c=START; c<=END; c++) 
+        {
+            nodes.put(c,new Node(c));
+            graph.add(nodes.get(c));
+        }
+
+        //adds edges from input
+        for(int i=0; i<e; i++) 
+        {
+            char[] data = in.nextLine().replace(" ","").toCharArray();
+            nodes.get(data[0]).link(nodes.get(data[1]));
+            nodes.get(data[1]).link(nodes.get(data[0]));
+        }
+
+        //start DFS at node 0 (assumes graph is connected)
+        HashSet<Edge> bridges = getBridges(graph.get(0));
+        
+        // for(Edge b : bridges) System.out.println(b);
+        HashSet<Node> AP = new HashSet<Node>();
+        for(Node n: graph) if(n.AP) 
+                AP.add(n);
+        
+        // for(Node n : AP) System.out.println(n.id);
+    }
+}

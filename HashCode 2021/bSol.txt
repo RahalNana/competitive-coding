@@ -1,0 +1,253 @@
+84
+3333
+1
+cjbg-dddd 4075
+3334
+1
+ebhc-ddde 5067
+3975
+1
+deje-djhf 2135
+3983
+1
+djhf-djid 2899
+3857
+1
+ecbj-difh 4755
+3859
+1
+difh-difj 4135
+6549
+1
+gfhd-gfej 5136
+5657
+1
+gbde-fgfh 4623
+5658
+1
+fggi-fgfi 3010
+5665
+1
+fggh-fggf 1984
+5666
+1
+fgid-fggg 3608
+5667
+1
+fgfh-fggh 1443
+5668
+1
+fggg-fggi 2786
+5669
+1
+fghe-fggj 4039
+3750
+1
+difj-dhfa 4874
+3240
+1
+dchb-dcea 2515
+3241
+1
+dcea-dceb 2357
+4907
+1
+ejba-ejah 1663
+4908
+1
+ejbb-ejai 159
+4909
+1
+fcbg-ejaj 210
+4910
+1
+ejag-ejba 1607
+4911
+1
+ejaj-ejbb 304
+4015
+1
+eabh-eabf 1888
+4017
+1
+dieb-eabh 1482
+5682
+1
+fgie-fgic 1532
+4018
+1
+dffj-eabi 2276
+5684
+1
+fggf-fgie 1851
+4155
+1
+ebfj-ebff 4101
+60
+1
+bigd-ga 3932
+4158
+1
+ebgj-ebfi 4652
+1602
+1
+jid-bgac 4799
+4162
+1
+ebff-ebgc 4904
+1603
+1
+ice-bgad 3365
+4165
+1
+ebia-ebgf 2158
+4166
+1
+ebgf-ebgg 2032
+3271
+1
+daad-dchb 2557
+1863
+1
+jic-bigd 4701
+4169
+1
+ebgg-ebgj 3743
+5835
+1
+fifa-fidf 5043
+3788
+1
+dhjb-dhii 3878
+3790
+1
+dhij-dhja 2240
+2511
+1
+cfbg-cfbb 2581
+5840
+1
+fieb-fiea 560
+2512
+1
+ebib-cfbc 3631
+2513
+1
+cfbe-cfbd 3773
+2514
+1
+cfbc-cfbe 2812
+4178
+1
+ebhh-ebhi 3184
+3411
+1
+debe-debb 2006
+2515
+1
+cfbb-cfbf 2090
+4180
+1
+cfbf-ebia 2181
+3029
+1
+eabi-dacj 2457
+4181
+1
+ebhi-ebib 2966
+3414
+1
+defe-debe 2061
+982
+1
+bgad-jic 3992
+5207
+1
+fgbg-fcah 449
+5463
+1
+fhce-fegd 3308
+983
+1
+bigc-jid 4840
+3674
+1
+dhab-dghe 2663
+3162
+1
+dbgf-dbgc 3270
+5850
+1
+fiee-fifa 4940
+3675
+1
+dghe-dghf 3407
+5852
+1
+fiea-fifc 524
+3165
+1
+dbii-dbgf 3852
+5216
+1
+fcbh-fcbg 390
+5217
+1
+fccb-fcbh 29
+3681
+1
+dacj-dgib 2406
+5218
+1
+ejah-fcbi 1356
+2915
+1
+dddi-cjbf 2216
+5221
+1
+fcah-fccb 615
+3686
+1
+dgih-dgig 2621
+3687
+1
+dghf-dgih 2862
+3559
+1
+ddcb-dffj 3712
+5616
+1
+fgbi-fgbg 94
+5618
+1
+fgbj-fgbi 249
+5619
+1
+fgbd-fgbj 354
+5620
+1
+fgbe-fgca 757
+6132
+1
+fgfi-gbdc 1293
+3700
+1
+dgib-dhaa 2316
+3316
+1
+dceb-ddbg 4985
+5621
+1
+fgca-fgcb 686
+3701
+1
+dhaa-dhab 2940
+3317
+1
+ddbg-ddbh 3150
+3321
+1
+ddbh-ddcb 3111
+3455
+1
+debb-deff 3063

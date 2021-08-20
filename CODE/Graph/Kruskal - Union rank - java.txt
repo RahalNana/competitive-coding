@@ -1,0 +1,140 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result 
+{
+    public static class Edge extends HashSet<Node> implements Comparable<Edge>
+    {
+        Integer weight;
+        Integer sum;
+        Node a, b;
+
+        public Edge(int weight, Node a, Node b)
+        {
+            super();
+            add(a);
+            add(b);
+            this.weight = weight;
+            this.a = a;
+            this.b = b;
+            sum = weight + a.id + b.id;
+        }
+
+        public String toString()
+        {
+            return weight+" : "+a.id+"-"+b.id;
+        }
+
+        public int compareTo(Edge e)
+        {
+            return weight.compareTo(e.weight)==0?sum.compareTo(e.sum):weight.compareTo(e.weight);
+        }
+    }
+
+    public static class Node
+    {
+        int id, rank;
+        Node parent;
+
+        public Node(int id)
+        {
+            this.id = id;
+            rank = 0;
+        }
+    }
+
+    public static Node root(Node n)
+    {
+        if (n.parent==null) return n;
+        return root(n.parent);
+    }
+
+    public static int kruskals(int gNodes, List<Integer> gFrom, List<Integer> gTo, List<Integer> gWeight) 
+    {
+        //creates blank nodes
+        ArrayList<Node> nodes = new ArrayList<Node>(gNodes);
+        for(int i=0; i<gNodes; i++) nodes.add(new Node(i));
+
+        //creates edge list
+        int e = gFrom.size();
+        LinkedList<Edge> edges = new LinkedList<Edge>();
+        for(int i=0; i<e; i++) 
+            edges.add(new Edge(gWeight.get(i), nodes.get(gFrom.get(i)-1), nodes.get(gTo.get(i)-1)));
+
+        //sort edges in ascending order of weight
+        Collections.sort(edges);
+        
+        //checks all edges
+        int sum = 0;
+        int eCount = 0;
+        Edge currEdge;
+        Node a, b, temp;
+        while(true)
+        {
+            currEdge = edges.pop();
+            a = root(currEdge.a);
+            b = root(currEdge.b);
+            if (!a.equals(b))
+            {
+                sum += currEdge.weight;
+                eCount++;
+                if (a.rank<b.rank) 
+                {
+                    //swap
+                    temp = b;
+                    b = a;
+                    a = temp;
+                }
+                b.parent = a;
+                if (a.rank==b.rank) a.rank++;
+            }
+            if (eCount==gNodes-1) break;
+        }
+        return sum;
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] gNodesEdges = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+        int gNodes = Integer.parseInt(gNodesEdges[0]);
+        int gEdges = Integer.parseInt(gNodesEdges[1]);
+
+        List<Integer> gFrom = new ArrayList<>();
+        List<Integer> gTo = new ArrayList<>();
+        List<Integer> gWeight = new ArrayList<>();
+
+        IntStream.range(0, gEdges).forEach(i -> {
+            try {
+                String[] gFromToWeight = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+                gFrom.add(Integer.parseInt(gFromToWeight[0]));
+                gTo.add(Integer.parseInt(gFromToWeight[1]));
+                gWeight.add(Integer.parseInt(gFromToWeight[2]));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        int res = Result.kruskals(gNodes, gFrom, gTo, gWeight);
+
+        bufferedWriter.write(res+"");
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}

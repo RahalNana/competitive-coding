@@ -1,0 +1,100 @@
+33
+5248
+1
+fdfi-fcei 1381
+129
+1
+cad-bcj 877
+385
+1
+die-dif 1425
+5763
+1
+fgff-fhgd 430
+5445
+1
+ffbh-feef 1557
+5510
+1
+fedi-ffba 482
+5768
+1
+fife-fhgi 1065
+5769
+1
+fhgi-fhgj 971
+5770
+1
+fhgj-fhha 924
+5771
+1
+fhha-fhhb 1112
+5517
+1
+ffij-ffbh 1601
+5582
+1
+ffba-ffic 534
+5583
+1
+ffic-ffid 637
+5588
+1
+fgga-ffii 783
+277
+1
+dih-chh 1249
+5589
+1
+ffii-ffij 1513
+5655
+1
+ffid-fgff 586
+5849
+1
+fhgd-fiej 68
+5659
+1
+fhhb-fgfj 735
+5660
+1
+fgfj-fgga 830
+5853
+1
+fjch-fifd 1159
+5854
+1
+fifd-fife 1018
+5025
+1
+fajj-facf 1469
+5923
+1
+fiej-fjcd 198
+5924
+1
+fjcd-fjce 133
+5925
+1
+fjce-fjcf 260
+5926
+1
+fjcf-fjcg 319
+5927
+1
+fjcg-fjch 377
+1511
+1
+bedj-bfbb 687
+5099
+1
+fbhd-fajj 1293
+5358
+1
+feea-fdfi 1645
+5173
+1
+fceh-fbhd 1204
+5247
+1
+fcei-fceh 1337

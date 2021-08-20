@@ -1,0 +1,90 @@
+    public static class MinHeap<T extends Comparable<T>> extends ArrayList<T>
+    {
+        public static int parent(int i)
+        {
+            return (i-1)/2;
+        }
+
+        public static int left(int i)
+        {
+            return 2*i+1;
+        }   
+
+        public static int right(int i)
+        {
+            return 2*i+2;
+        }
+
+        public void swap(int i, int j)
+        {
+            T temp = get(i);
+            set(i, get(j));
+            set(j, temp);
+        }
+
+        public MinHeap(List<T> list)
+        {
+            super(list);
+            for(int x=parent(size()-1); x>=0; x--)
+                heapify(x);
+        }
+
+        public void heapify(int i)
+        {
+            int index = i;
+            T smallest = get(i);
+            if(left(i)<size() && get(left(i)).compareTo(smallest)<0)
+            {
+                index = left(i);
+                smallest = get(left(i));
+            }
+            if(right(i)<size() && get(right(i)).compareTo(smallest)<0)
+            {
+                index = right(i);
+                smallest = get(right(i));
+            }
+            if (index!=i)
+            {  
+                swap(index, i);
+                heapify(index);          
+            }
+        }
+
+        public ArrayList<T> heapSort()
+        {
+            ArrayList<T> ans = new ArrayList();
+            while(size()>0) ans.add(extractMin());
+            return ans;
+        }
+
+        public boolean add(T a)
+        {
+            super.add(a);
+            int i = size()-1;
+            while(get(i).compareTo(get(parent(i)))<0)
+            {
+                swap(i, parent(i));
+                i = parent(i);
+            }
+            return true;
+        }
+
+        public void decrease(int i, T val)
+        {
+            if(val.compareTo(get(i))>0) return;
+            set(i, val);
+            while(get(i).compareTo(get(parent(i)))<0)
+            {
+                swap(i, parent(i));
+                i = parent(i);
+            }
+        }
+
+        public T extractMin()
+        {
+            swap(0, size()-1);
+            T ans = remove(size()-1);
+            if(size()!=0) heapify(0);
+            return ans;
+        }
+    }

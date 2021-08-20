@@ -1,0 +1,17 @@
+    static int binarySearch(int[] arr, int val)
+    {
+        return binSearch(arr, 0, arr.length-1, val);
+    }
+
+    static int binSearch(int[] arr, int start, int end, int val)
+    {
+        int mid = (start+end)/2;
+        if (end<start)
+            return -1;
+        if(arr[mid]==val)
+            return mid;
+        else if(val<arr[mid])
+            return binSearch(arr,start,mid-1,val);
+        else
+            return binSearch(arr,mid+1,end,val);
+    }
